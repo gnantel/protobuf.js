@@ -499,25 +499,27 @@ Type.prototype.encodeDelimited = function encodeDelimited(message, writer) {
  * Decodes a message of this type.
  * @param {Reader|Uint8Array} reader Reader or buffer to decode from
  * @param {number} [length] Length of the message, if known beforehand
+ * @param {boolean} [preserveUnknowns] Preserve unknown fields in a non-enumerable property
  * @returns {Message<{}>} Decoded message
  * @throws {Error} If the payload is not a reader or valid buffer
  * @throws {util.ProtocolError<{}>} If required fields are missing
  */
-Type.prototype.decode = function decode_setup(reader, length) {
-    return this.setup().decode(reader, length); // overrides this method
+Type.prototype.decode = function decode_setup(reader, length, preserveUnknowns) {
+    return this.setup().decode(reader, length, preserveUnknowns); // overrides this method
 };
 
 /**
  * Decodes a message of this type preceeded by its byte length as a varint.
  * @param {Reader|Uint8Array} reader Reader or buffer to decode from
+ * @param {boolean} [preserveUnknowns] Preserve unknown fields in a non-enumerable property
  * @returns {Message<{}>} Decoded message
  * @throws {Error} If the payload is not a reader or valid buffer
  * @throws {util.ProtocolError} If required fields are missing
  */
-Type.prototype.decodeDelimited = function decodeDelimited(reader) {
+Type.prototype.decodeDelimited = function decodeDelimited(reader, preserveUnknowns) {
     if (!(reader instanceof Reader))
         reader = Reader.create(reader);
-    return this.decode(reader, reader.uint32());
+    return this.decode(reader, reader.uint32(), preserveUnknowns);
 };
 
 /**
@@ -555,6 +557,7 @@ Type.prototype.fromObject = function fromObject(object) {
  * @property {boolean} [objects=false] Sets empty objects for missing map fields even if `defaults=false`
  * @property {boolean} [oneofs=false] Includes virtual oneof properties set to the present field's name, if any
  * @property {boolean} [json=false] Performs additional JSON compatibility conversions, i.e. NaN and Infinity to strings
+ * @property {boolean} [unknowns=false] Includes unknown fields in a non-enumerable $$unk property in the resulting object
  */
 
 /**

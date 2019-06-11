@@ -73,12 +73,14 @@ Message.encodeDelimited = function encodeDelimited(message, writer) {
  * @name Message.decode
  * @function
  * @param {Reader|Uint8Array} reader Reader or buffer to decode
+ * @Param 
+ * @param {boolean} [preserveUnknowns] Preserve unknown fields in a non-enumerable property
  * @returns {T} Decoded message
  * @template T extends Message<T>
  * @this Constructor<T>
  */
-Message.decode = function decode(reader) {
-    return this.$type.decode(reader);
+Message.decode = function decode(reader, preserveUnknowns) {
+    return this.$type.decode(reader, undefined, preserveUnknowns);
 };
 
 /**
@@ -86,12 +88,13 @@ Message.decode = function decode(reader) {
  * @name Message.decodeDelimited
  * @function
  * @param {Reader|Uint8Array} reader Reader or buffer to decode
+ * @param {boolean} [preserveUnknowns] Preserve unknown fields in a non-enumerable property
  * @returns {T} Decoded message
  * @template T extends Message<T>
  * @this Constructor<T>
  */
-Message.decodeDelimited = function decodeDelimited(reader) {
-    return this.$type.decodeDelimited(reader);
+Message.decodeDelimited = function decodeDelimited(reader, preserveUnknowns) {
+    return this.$type.decodeDelimited(reader, preserveUnknowns);
 };
 
 /**

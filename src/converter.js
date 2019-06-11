@@ -139,6 +139,8 @@ converter.fromObject = function fromObject(mtype) {
     ("}");
         }
     } return gen
+    ("if(d.$$unk)")
+        ("m.$$unk=d.$$unk")
     ("return m");
     /* eslint-enable no-unexpected-multiline, block-scoped-var, no-redeclare */
 };
@@ -288,6 +290,8 @@ converter.toObject = function toObject(mtype) {
     ("}");
     }
     return gen
+    ("if(o.unknowns)")
+        ("Object.defineProperty(d,'$$unk',{enumerable:false,value:m.$$unk})")
     ("return d");
     /* eslint-enable no-unexpected-multiline, block-scoped-var, no-redeclare */
 };

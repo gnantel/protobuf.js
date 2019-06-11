@@ -95,6 +95,9 @@ function encoder(mtype) {
     }
 
     return gen
+    ("if(m.$$unk)")
+        ("for(var i=0;i<m.$$unk.length;++i)")
+            ("w.serialized(m.$$unk[i])")
     ("return w");
     /* eslint-enable no-unexpected-multiline, block-scoped-var, no-redeclare */
 }
