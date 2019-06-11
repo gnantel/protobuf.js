@@ -16,11 +16,14 @@ function missing(field) {
  */
 function decoder(mtype) {
     /* eslint-disable no-unexpected-multiline */
-    var gen = util.codegen(["r", "l"], mtype.name + "$decode")
+    var gen = util.codegen(["r", "l", "o"], mtype.name + "$decode")
     ("if(!(r instanceof Reader))")
         ("r=Reader.create(r)")
     ("var c=l===undefined?r.len:r.pos+l,m=new this.ctor" + (mtype.fieldsArray.filter(function(field) { return field.map; }).length ? ",k" : ""))
+    ("if(o)")
+        ("Object.defineProperty(m,'$$unk',{enumerable:false,value:[]})")
     ("while(r.pos<c){")
+        ("var spos=r.pos")
         ("var t=r.uint32()");
     if (mtype.group) gen
         ("if((t&7)===4)")
@@ -44,12 +47,12 @@ function decoder(mtype) {
                 ("r.pos++"); // assumes id 2 + value wireType
             if (types.long[field.keyType] !== undefined) {
                 if (types.basic[type] === undefined) gen
-                ("%s[typeof k===\"object\"?util.longToHash(k):k]=types[%i].decode(r,r.uint32())", ref, i); // can't be groups
+                ("%s[typeof k===\"object\"?util.longToHash(k):k]=types[%i].decode(r,r.uint32(),o)", ref, i); // can't be groups
                 else gen
                 ("%s[typeof k===\"object\"?util.longToHash(k):k]=r.%s()", ref, type);
             } else {
                 if (types.basic[type] === undefined) gen
-                ("%s[k]=types[%i].decode(r,r.uint32())", ref, i); // can't be groups
+                ("%s[k]=types[%i].decode(r,r.uint32(),o)", ref, i); // can't be groups
                 else gen
                 ("%s[k]=r.%s()", ref, type);
             }
@@ -70,15 +73,15 @@ function decoder(mtype) {
 
             // Non-packed
             if (types.basic[type] === undefined) gen(field.resolvedType.group
-                    ? "%s.push(types[%i].decode(r))"
-                    : "%s.push(types[%i].decode(r,r.uint32()))", ref, i);
+                    ? "%s.push(types[%i].decode(r,undefined,o))"
+                    : "%s.push(types[%i].decode(r,r.uint32(),o))", ref, i);
             else gen
                     ("%s.push(r.%s())", ref, type);
 
         // Non-repeated
         } else if (types.basic[type] === undefined) gen(field.resolvedType.group
-                ? "%s=types[%i].decode(r)"
-                : "%s=types[%i].decode(r,r.uint32())", ref, i);
+                ? "%s=types[%i].decode(r,undefined,o)"
+                : "%s=types[%i].decode(r,r.uint32(),o)", ref, i);
         else gen
                 ("%s=r.%s()", ref, type);
         gen
@@ -87,6 +90,8 @@ function decoder(mtype) {
     } gen
             ("default:")
                 ("r.skipType(t&7)")
+                ("if(o)")
+                    ("m.$$unk.push(r._slice.call(r.buf,spos,r.pos))")
                 ("break")
 
         ("}")

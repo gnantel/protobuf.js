@@ -380,6 +380,15 @@ Writer.prototype.bytes = function write_bytes(value) {
 };
 
 /**
+ * Writes pre-serialized bytes.
+ * @param {Uint8Array} value Buffer to write
+ * @returns {Writer} `this`
+ */
+Writer.prototype.serialized = function write_serialized(value) {
+    return this._push(writeBytes, value.length, value)
+}
+
+/**
  * Writes a string.
  * @param {string} value Value to write
  * @returns {Writer} `this`
