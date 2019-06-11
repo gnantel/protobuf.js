@@ -73,7 +73,6 @@ Message.encodeDelimited = function encodeDelimited(message, writer) {
  * @name Message.decode
  * @function
  * @param {Reader|Uint8Array} reader Reader or buffer to decode
- * @Param 
  * @param {boolean} [preserveUnknowns] Preserve unknown fields in a non-enumerable property
  * @returns {T} Decoded message
  * @template T extends Message<T>

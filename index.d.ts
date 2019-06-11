@@ -1,5 +1,7 @@
 // DO NOT EDIT! This is a generated file. Edit the JSDoc in src/*.js instead and run 'npm run types'.
 
+import * as Long from "long";
+
 export as namespace protobuf;
 
 /**
@@ -549,16 +551,18 @@ export class Message<T extends object = object> {
     /**
      * Decodes a message of this type.
      * @param reader Reader or buffer to decode
+     * @param [preserveUnknowns] Preserve unknown fields in a non-enumerable property
      * @returns Decoded message
      */
-    public static decode<T extends Message<T>>(this: Constructor<T>, reader: (Reader|Uint8Array)): T;
+    public static decode<T extends Message<T>>(this: Constructor<T>, reader: (Reader|Uint8Array), preserveUnknowns?: boolean): T;
 
     /**
      * Decodes a message of this type preceeded by its length as a varint.
      * @param reader Reader or buffer to decode
+     * @param [preserveUnknowns] Preserve unknown fields in a non-enumerable property
      * @returns Decoded message
      */
-    public static decodeDelimited<T extends Message<T>>(this: Constructor<T>, reader: (Reader|Uint8Array)): T;
+    public static decodeDelimited<T extends Message<T>>(this: Constructor<T>, reader: (Reader|Uint8Array), preserveUnknowns?: boolean): T;
 
     /**
      * Verifies a message of this type.
@@ -1605,20 +1609,22 @@ export class Type extends NamespaceBase {
      * Decodes a message of this type.
      * @param reader Reader or buffer to decode from
      * @param [length] Length of the message, if known beforehand
+     * @param [preserveUnknowns] Preserve unknown fields in a non-enumerable property
      * @returns Decoded message
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {util.ProtocolError<{}>} If required fields are missing
      */
-    public decode(reader: (Reader|Uint8Array), length?: number): Message<{}>;
+    public decode(reader: (Reader|Uint8Array), length?: number, preserveUnknowns?: boolean): Message<{}>;
 
     /**
      * Decodes a message of this type preceeded by its byte length as a varint.
      * @param reader Reader or buffer to decode from
+     * @param [preserveUnknowns] Preserve unknown fields in a non-enumerable property
      * @returns Decoded message
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {util.ProtocolError} If required fields are missing
      */
-    public decodeDelimited(reader: (Reader|Uint8Array)): Message<{}>;
+    public decodeDelimited(reader: (Reader|Uint8Array), preserveUnknowns?: boolean): Message<{}>;
 
     /**
      * Verifies that field values are valid and that required fields are present.
@@ -1707,6 +1713,9 @@ export interface IConversionOptions {
 
     /** Performs additional JSON compatibility conversions, i.e. NaN and Infinity to strings */
     json?: boolean;
+
+    /** Includes unknown fields in a non-enumerable $$unk property in the resulting object */
+    unknowns?: boolean;
 }
 
 /**
@@ -2585,6 +2594,13 @@ export class Writer {
      * @returns `this`
      */
     public bytes(value: (Uint8Array|string)): Writer;
+
+    /**
+     * Writes pre-serialized bytes.
+     * @param value Buffer to write
+     * @returns `this`
+     */
+    public serialized(value: Uint8Array): Writer;
 
     /**
      * Writes a string.
